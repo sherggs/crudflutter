@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast.dart'; //Ref: https://pub.dev/packages/fluttertoast
 
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart'; //Ref: https://pub.dev/packages/provider
 
-import '../helper/note_provider.dart';
-import '../models/note.dart';
+import '../helper/blog_provider.dart'; //database provider from helper folder
+import '../models/blog.dart'; //blog model
 
 class DeletePopUp extends StatelessWidget {
-  final Note selectedNote;
+  final Blog selectedblog;
 
-  DeletePopUp(this.selectedNote);
+  DeletePopUp(this.selectedblog);
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,13 @@ class DeletePopUp extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       title: Text('Delete?'),
-      content: Text('Do you want to delete the note?'),
+      content: Text('Do you want to delete the blog?'),
       actions: [
         TextButton(
           child: Text('Yes'),
           onPressed: () {
-            Provider.of<NoteProvider>(context, listen: false)
-                .deleteNote(selectedNote.id);
+            Provider.of<BlogProvider>(context, listen: false)
+                .deleteBlog(selectedblog.id);
             Navigator.popUntil(context, ModalRoute.withName('/'));
             Fluttertoast.showToast(
                 textColor: Colors.white,

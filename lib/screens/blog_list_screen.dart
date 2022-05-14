@@ -1,22 +1,19 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:blogcrud/screens/searchscreen.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../helper/blog_provider.dart';
+import 'package:blogcrud/screens/searchscreen.dart';  //to search for items with title name
+import 'package:provider/provider.dart'; //Ref: https://pub.dev/packages/provider
+import '../helper/blog_provider.dart'; //provides database
 import '../navigation/navigation_helper.dart';
-import '../utils/constants.dart';
-import '../widgets/list_item.dart';
-import '../widgets/localcrud/heading_text.dart';
-import 'blog_edit_screen.dart';
+import '../utils/constants.dart'; //styling
+import '../widgets/list_item.dart'; //styling for listing each items on the page
+import '../widgets/localcrud/heading_text.dart'; //styling for heading and sub heading
+import 'blog_edit_screen.dart'; //  page displayed when the + is clicked
 
-class blogListScreen extends StatefulWidget {
+class BlogListScreen extends StatefulWidget {
   @override
-  State<blogListScreen> createState() => _blogListScreenState();
+  State<BlogListScreen> createState() => _BlogListScreenState();
 }
 
-class _blogListScreenState extends State<blogListScreen> {
+class _BlogListScreenState extends State<BlogListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +25,11 @@ class _blogListScreenState extends State<blogListScreen> {
             ),
             header(),
             Container(
-              height: 550,
+              height: 700,
+              width: 500,
               child: FutureBuilder(
-                future: Provider.of<blogProvider>(context, listen: false)
-                    .getblogs(),
+                future: Provider.of<BlogProvider>(context, listen: false)
+                    .getBlogs(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Scaffold(
@@ -42,21 +40,21 @@ class _blogListScreenState extends State<blogListScreen> {
                   } else {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return Scaffold(
-                        body: Consumer<blogProvider>(
-                          child: noblogsUI(context),
-                          builder: (context, blogprovider, child) =>
-                          blogprovider.items.length <= 0
+                        body: Consumer<BlogProvider>(
+                          child: noBlogsUI(context),
+                          builder: (context, Blogprovider, child) =>
+                          Blogprovider.items.length <= 0
                               ? child
                               : ListView.builder(
                             padding: EdgeInsets.only(),
                             physics: BouncingScrollPhysics(),
-                            itemCount: blogprovider.items.length + 1,
+                            itemCount: Blogprovider.items.length + 1,
                             itemBuilder: (context, index) {
                               if (index == 0) {
                                 return Text("");
                               } else {
                                 final i = index - 1;
-                                final item = blogprovider.items[i];
+                                final item = Blogprovider.items[i];
 
                                 return ListItem(
                                   item.id,
@@ -93,7 +91,6 @@ class _blogListScreenState extends State<blogListScreen> {
 
   Widget header() {
     return GestureDetector(
-      onTap: _launchUrl,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -105,7 +102,7 @@ class _blogListScreenState extends State<blogListScreen> {
             child: Row(
               children: [
                 const HeadingText(
-                    heading: "All Blogs", subHeading: "Find your blogs"),
+                    heading: "All Blogs", subHeading: "Add or Find your blogs"),
               ],
             ),
           ),
@@ -132,14 +129,13 @@ class _blogListScreenState extends State<blogListScreen> {
                         width: 13,
                       ),
                       Text(
-                        "Search Blog",
+                        "Search for your Blog title ",
                         style: TextStyle(color: Colors.black.withOpacity(0.6)),
                       )
                     ],
                   ),
                 ),
               ),
-
             ),
           ),
           SizedBox(
@@ -150,16 +146,8 @@ class _blogListScreenState extends State<blogListScreen> {
     );
   }
 
-  void _launchUrl() async {
-    const url = 'https://www.androidride.com';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
-  Widget noblogsUI(BuildContext context) {
+  Widget noBlogsUI(BuildContext context) {
     return ListView(
       children: [
         //  header(),
@@ -170,21 +158,13 @@ class _blogListScreenState extends State<blogListScreen> {
               child: Image.asset(
                 'blogging.png',
                 fit: BoxFit.cover,
-                width: 300.0,
-                height: 300.0,
+                width: 250.0,
+                height: 250.0,
               ),
             ),
             RichText(
               text: TextSpan(style: noblogsStyle, children: [
-                TextSpan(text: ' There is no Blog available\n Tap on "'),
-                TextSpan(
-                    text: '+',
-                    style: boldPlus,
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        goToblogEditScreen(context);
-                      }),
-                TextSpan(text: '" to add new blog')
+                TextSpan(text: ' There is no accessible Blog\n Click the button to add new')
               ]),
             ),
           ],
@@ -194,6 +174,6 @@ class _blogListScreenState extends State<blogListScreen> {
   }
 
   void goToblogEditScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(blogEditScreen.route);
+    Navigator.of(context).pushNamed(BlogEditScreen.route);
   }
 }

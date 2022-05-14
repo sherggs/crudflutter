@@ -1,21 +1,17 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_share/flutter_share.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart'; //Ref: https://pub.dev/packages/provider
+import 'package:url_launcher/url_launcher.dart'; //for the share icon to redirect to the mail
 
-import '../helper/blog_provider.dart';
-import '../models/blog.dart';
-import '../utils/constants.dart';
+import '../helper/blog_provider.dart'; //database Provider
+import '../models/blog.dart'; //database model
+import '../utils/constants.dart'; //constants "google fonts styles"
 import '../utils/localcrud/constant.dart';
-import '../widgets/delete_popup.dart';
-import '../widgets/localcrud/customButton.dart';
-import '../widgets/localcrud/custom_text.dart';
-import '../widgets/localcrud/event_detail_card.dart';
-import 'blog_edit_screen.dart';
+import '../widgets/delete_popup.dart'; //the screen that pops up for the yes or no validation
+import '../widgets/localcrud/customButton.dart'; //custom button styling
+import '../widgets/localcrud/custom_text.dart'; //custom text styling
+import 'blog_edit_screen.dart'; //create and update screen
 
 class blogViewScreen extends StatefulWidget {
   static const route = '/blog-view';
@@ -25,7 +21,7 @@ class blogViewScreen extends StatefulWidget {
 }
 
 class _blogViewScreenState extends State<blogViewScreen> {
-  blog? selectedblog;
+  Blog? selectedBlog;
 
   @override
   void didChangeDependencies() {
@@ -34,11 +30,11 @@ class _blogViewScreenState extends State<blogViewScreen> {
 
     final id = ModalRoute.of(context)!.settings.arguments;
 
-    final provider = Provider.of<blogProvider>(context);
+    final provider = Provider.of<BlogProvider>(context);
 
     ///need to uncomment
-    if (provider.getblog(id as int) != null) {
-      selectedblog = provider.getblog(id);
+    if (provider.getBlog(id as int) != null) {
+      selectedBlog = provider.getBlog(id);
     }
   }
 
@@ -60,10 +56,10 @@ class _blogViewScreenState extends State<blogViewScreen> {
                 buttonColor: appColor,
                 radius: 6,
                 onPress: () {
-                  Navigator.pushNamed(context, blogEditScreen.route,
-                      arguments: selectedblog!.id);
+                  Navigator.pushNamed(context, BlogEditScreen.route,
+                      arguments: selectedBlog!.id);
                 },
-                buttonWidht: double.infinity),
+                buttonWidth: double.infinity),
           ],
         ),
       ),
@@ -84,31 +80,16 @@ class _blogViewScreenState extends State<blogViewScreen> {
           IconButton(
             icon: Icon(
               Icons.share,
-              color: black,
+              color: Colors.green,
             ),
             onPressed: ()async {
-              // FlutterShare.share(
-              //         title: selectedblog!.title.toString(),
-              //         text: selectedblog!.content.toString(),
-              //         linkUrl: selectedblog!.imagePath.toString(),
-              //         chooserTitle: selectedblog!.date.toString())
-              //     .then((value) {
-              //   Fluttertoast.showToast(
-              //       msg: "Blog Shared SuccessFully",
-              //       toastLength: Toast.LENGTH_SHORT,
-              //       gravity: ToastGravity.BOTTOM,
-              //       timeInSecForIosWeb: 1,
-              //       backgroundColor: Colors.red,
-              //       textColor: Colors.white,
-              //       fontSize: 16.0);
-              // });
-              await _launchURL("", selectedblog!.title, selectedblog!.content);
+              await _launchURL("", selectedBlog!.title, selectedBlog!.content);
             },
           ),
           IconButton(
             icon: Icon(
               Icons.delete,
-              color: black,
+              color: Colors.red,
             ),
             onPressed: () => _showDialog(),
           ),
@@ -121,11 +102,11 @@ class _blogViewScreenState extends State<blogViewScreen> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Text(
-                selectedblog!.title,
+                selectedBlog!.title,
                 style: viewTitleStyle,
               ),
             ),
-            if (selectedblog!.imagePath != null)
+            if (selectedBlog!.imagePath != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Container(
@@ -136,7 +117,7 @@ class _blogViewScreenState extends State<blogViewScreen> {
 
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: AssetImage(selectedblog!.imagePath)
+                        image: AssetImage(selectedBlog!.imagePath)
                         as ImageProvider,
                       ),
                       color: const Color(0xffF0F0F0),
@@ -160,7 +141,7 @@ class _blogViewScreenState extends State<blogViewScreen> {
                     width: 5,
                   ),
                   Text(
-                    selectedblog!.date.toString(),
+                    selectedBlog!.date.toString(),
                     overflow: TextOverflow.ellipsis,
                     style: itemDateStyle,
                   ),
@@ -181,7 +162,7 @@ class _blogViewScreenState extends State<blogViewScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                selectedblog!.content,
+                selectedBlog!.content,
                 style: viewContentStyle,
               ),
             ),
@@ -195,7 +176,7 @@ class _blogViewScreenState extends State<blogViewScreen> {
     showDialog(
         context: this.context,
         builder: (context) {
-          return DeletePopUp(selectedblog!);
+          return DeletePopUp(selectedBlog!);
         });
   }
   _launchURL(String toMailId, String subject, String body) async {

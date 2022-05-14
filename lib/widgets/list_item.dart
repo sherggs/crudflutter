@@ -2,10 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../screens/note_view_screen.dart';
-import '../utils/constants.dart';
-import 'localcrud/custom_text.dart';
-import 'localcrud/event_detail_card.dart';
+import '../screens/blog_view_screen.dart'; // blog view screen
+import '../utils/constants.dart'; //styling
+import 'localcrud/custom_text.dart'; // custom text styling
 
 class ListItem extends StatelessWidget {
   final int id;
@@ -26,7 +25,7 @@ class ListItem extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, NoteViewScreen.route, arguments: id);
+              Navigator.pushNamed(context, blogViewScreen.route, arguments: id);
             },
             child: Container(
               width: double.infinity,

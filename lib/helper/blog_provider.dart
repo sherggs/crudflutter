@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import '../models/blog.dart';
-import '../utils/constants.dart';
-import 'database_helper.dart';
+import '../models/blog.dart'; //blog model
+import '../utils/constants.dart'; //styling
+import 'database_helper.dart'; //databse helper
 
-class blogProvider with ChangeNotifier {
+class BlogProvider with ChangeNotifier {
   List<dynamic> _items = [];
 
   List<dynamic> get items {
     return [..._items];
   }
 
-  blog getblog(int id) {
+  Blog getBlog(int id) {
     return _items.firstWhere((blog) => blog.id == id, orElse: () => null);
   }
 
-  Future deleteblog(int id) {
+  Future deleteBlog(int id) {
     _items.removeWhere((element) => element.id == id);
     notifyListeners();
     return DatabaseHelper.delete(id);
   }
 
-  Future addOrUpdateblog(int id, String title, String content, String imagePath,
+  Future addOrUpdateBlog(int id, String title, String content, String imagePath,
       EditMode editMode) async {
-    final blog = blog(id, title, content, imagePath);
+    final blog = Blog(id, title, content, imagePath);
 
     if (EditMode.ADD == editMode) {
       _items.insert(0, blog);
@@ -40,12 +40,10 @@ class blogProvider with ChangeNotifier {
     });
   }
 
-  Future getblogs() async {
-    final blogsList = await DatabaseHelper.getblogsFromDB();
+  Future getBlogs() async {
+    final blogsList = await DatabaseHelper.getBlogsFromDB();
 
-    _items = blogsList
-        .map(
-          (item) => blog(item['id'] as int, item['title'] as String,
+    _items = blogsList.map((item) => Blog(item['id'] as int, item['title'] as String,
               item['content'] as String, item['imagePath'] as String),
         )
         .toList();
@@ -53,16 +51,17 @@ class blogProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future getSearchedblogs(String keyword) async {
-    final searchblogsList = await DatabaseHelper.getSearchblogsFromDB(keyword);
+  Future getSearchedBlogs(String keyword) async {
+    final searchBlogsList = await DatabaseHelper.getSearchBlogsFromDB(keyword);
 
-    _items = searchblogsList
+    _items = searchBlogsList
         .map(
-          (item) => blog(item['id'] as int, item['title'] as String,
+          (item) => Blog(item['id'] as int, item['title'] as String,
               item['content'] as String, item['imagePath'] as String),
         )
         .toList();
 
     notifyListeners();
   }
+
 }

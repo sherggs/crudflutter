@@ -12,7 +12,7 @@ class CustomButton extends StatelessWidget {
   final Color buttonColor;
   final double radius;
   final VoidCallback onPress;
-  final double buttonWidht;
+  final double buttonWidth;
   final bool? isClicked;
 
   const CustomButton({
@@ -27,7 +27,7 @@ class CustomButton extends StatelessWidget {
     required this.buttonColor,
     required this.radius,
     required this.onPress,
-    required this.buttonWidht,
+    required this.buttonWidth,
     this.isClicked = false,
   }) : super(key: key);
 
@@ -39,7 +39,7 @@ class CustomButton extends StatelessWidget {
         onTap: () => onPress(),
         child: Container(
           height: buttonHeight,
-          width: buttonWidht,
+          width: buttonWidth,
           decoration: BoxDecoration(
             color: buttonColor,
             borderRadius: BorderRadius.circular(radius),

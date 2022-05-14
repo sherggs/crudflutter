@@ -1,12 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../helper/note_provider.dart';
+import '../helper/blog_provider.dart';
 import '../utils/constants.dart';
 import '../utils/localcrud/constant.dart';
 import '../widgets/list_item.dart';
-import 'note_edit_screen.dart';
+import 'blog_edit_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -82,8 +81,8 @@ class _SearchScreenState extends State<SearchScreen> {
             Container(
               height: 600,
               child: FutureBuilder(
-                future: Provider.of<NoteProvider>(context, listen: false)
-                    .getSearchedNotes(keyword.toString()),
+                future: Provider.of<BlogProvider>(context, listen: false)
+                    .getSearchedBlogs(keyword.toString()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Scaffold(
@@ -94,21 +93,21 @@ class _SearchScreenState extends State<SearchScreen> {
                   } else {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return Scaffold(
-                        body: Consumer<NoteProvider>(
-                          child: noNotesUI(context),
-                          builder: (context, noteprovider, child) =>
-                              noteprovider.items.length <= 0
+                        body: Consumer<BlogProvider>(
+                          child: noblogsUI(context),
+                          builder: (context, Blogprovider, child) =>
+                              Blogprovider.items.length <= 0
                                   ? child
                                   : ListView.builder(
                                       padding: EdgeInsets.only(),
                                       physics: BouncingScrollPhysics(),
-                                      itemCount: noteprovider.items.length + 1,
+                                      itemCount: Blogprovider.items.length + 1,
                                       itemBuilder: (context, index) {
                                         if (index == 0) {
                                           return Text("");
                                         } else {
                                           final i = index - 1;
-                                          final item = noteprovider.items[i];
+                                          final item = Blogprovider.items[i];
 
                                           return ListItem(
                                             item.id,
@@ -121,15 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       },
                                     ),
                         ),
-                        // floatingActionButton: FloatingActionButton(
-                        //   backgroundColor: Colors.green,
-                        //   onPressed: () {
-                        //     goToNoteEditScreen(context);
-                        //   },
-                        //   child: Icon(
-                        //     Icons.add,
-                        //   ),
-                        // ),
+
                       );
                     }
                   }
@@ -143,35 +134,19 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget noNotesUI(BuildContext context) {
+  Widget noblogsUI(BuildContext context) {
     return ListView(
       children: [
         //  header(),
         Column(
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 50.0),
-            //   child: Image.asset(
-            //     'crying_emoji.png',
-            //     fit: BoxFit.cover,
-            //     width: 200.0,
-            //     height: 200.0,
-            //   ),
-            // ),
+
             SizedBox(
               height: 200,
             ),
             RichText(
-              text: TextSpan(style: noNotesStyle, children: [
+              text: TextSpan(style: noblogsStyle, children: const [
                 TextSpan(text: ' Search Blogs'),
-                // TextSpan(
-                //     text: '+',
-                //     style: boldPlus,
-                //     recognizer: TapGestureRecognizer()
-                //       ..onTap = () {
-                //         goToNoteEditScreen(context);
-                //       }),
-                // TextSpan(text: '" to add new blog')
               ]),
             ),
           ],
@@ -180,7 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void goToNoteEditScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(NoteEditScreen.route);
+  void goToblogEditScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(BlogEditScreen.route);
   }
 }

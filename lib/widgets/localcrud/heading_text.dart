@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'custom_text.dart';
+import 'custom_text.dart'; //from widget folder inside localcrud
 
 class HeadingText extends StatelessWidget {
   final String heading;

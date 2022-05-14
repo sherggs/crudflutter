@@ -1,29 +1,31 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast.dart'; //Ref: https://pub.dev/packages/fluttertoast
 
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart'; //image picker from photo library
+import 'package:path/path.dart'; //Ref: https://pub.dev/packages/path
+ import 'package:path_provider/path_provider.dart'; //Ref: https://pub.dev/packages/provider
+ import 'package:provider/provider.dart'; //Ref: https://pub.dev/packages/provider
 
-import '../helper/blog_provider.dart';
-import '../models/blog.dart';
-import '../utils/constants.dart';
-import '../utils/localcrud/constant.dart';
-import '../widgets/delete_popup.dart';
-import '../widgets/localcrud/customButton.dart';
-import 'blog_view_screen.dart';
+import '../helper/blog_provider.dart'; //database
+import '../models/blog.dart'; //database model
+import '../utils/constants.dart'; //styling
+import '../utils/localcrud/constant.dart'; //app styling
+import '../widgets/delete_popup.dart'; //delet pop up for yes or no validation
+import '../widgets/localcrud/customButton.dart'; //custom button styling
+import 'blog_view_screen.dart'; //screen/blog_view_screen.dart to read blog data
 
-class blogEditScreen extends StatefulWidget {
+class BlogEditScreen extends StatefulWidget {
   static const route = '/edit-blog';
 
   @override
-  _blogEditScreenState createState() => _blogEditScreenState();
+  _BlogEditScreenState createState() {
+    return _BlogEditScreenState();
+  }
 }
 
-class _blogEditScreenState extends State<blogEditScreen> {
+class _BlogEditScreenState extends State<BlogEditScreen> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 
@@ -32,7 +34,7 @@ class _blogEditScreenState extends State<blogEditScreen> {
   final picker = ImagePicker();
 
   bool firstTime = true;
-  blog? selectedblog;
+  Blog? selectedBlog;
   int? id;
 
   @override
@@ -44,16 +46,16 @@ class _blogEditScreenState extends State<blogEditScreen> {
       id = ModalRoute.of(this.context)!.settings.arguments as int?;
 
       if (id != null) {
-        selectedblog = Provider.of<blogProvider>(
+        selectedBlog = Provider.of<BlogProvider>(
           this.context,
           listen: false,
-        ).getblog(id!);
+        ).getBlog(id!);
 
-        titleController.text = selectedblog!.title;
-        contentController.text = selectedblog!.content;
+        titleController.text = selectedBlog!.title;
+        contentController.text = selectedBlog!.content;
 
-        if (selectedblog?.imagePath != null) {
-          _image = File(selectedblog!.imagePath);
+        if (selectedBlog?.imagePath != null) {
+          _image = File(selectedBlog!.imagePath);
         }
       }
     }
@@ -77,7 +79,7 @@ class _blogEditScreenState extends State<blogEditScreen> {
           children: [
             CustomButton(
                 padding: 30,
-                text: "Save",
+                text: "Save Blog ",
                 buttonHeight: 50,
                 textSize: 14,
                 fontWeight: FontWeight.w500,
@@ -86,13 +88,14 @@ class _blogEditScreenState extends State<blogEditScreen> {
                 buttonColor: appColor,
                 radius: 6,
                 onPress: () {
-                  if (titleController.text.isEmpty)
+                  if (titleController.text.isEmpty) {
                     titleController.text = 'Untitled blog';
+                  }
 
-                  saveblog();
-                  // addProduct();
+                  saveBlog();
+
                 },
-                buttonWidht: double.infinity),
+                buttonWidth: double.infinity),
           ],
         ),
       ),
@@ -102,21 +105,21 @@ class _blogEditScreenState extends State<blogEditScreen> {
         backgroundColor: white,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           color: black,
         ),
         actions: [
 
           IconButton(
-            icon: Icon(Icons.share),
-            color: black,
+            icon: const Icon(Icons.share),
+            color: Colors.green,
             onPressed: () {
               //  getImage(ImageSource.gallery);
             },
           ),
           IconButton(
-            icon: Icon(Icons.delete),
-            color: black,
+            icon: const Icon(Icons.delete),
+            color: Colors.red,
             onPressed: () {
               if (id != null) {
                 _showDialog();
@@ -130,7 +133,7 @@ class _blogEditScreenState extends State<blogEditScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Padding(
@@ -163,17 +166,16 @@ class _blogEditScreenState extends State<blogEditScreen> {
                         width: 40,
                         child: Center(
                           child: IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.camera_alt_outlined,
                                 color: Colors.white,
                                 size: 19,
                               ),
                               onPressed: () {
                                 getImage(ImageSource.gallery);
-                                //  pickImageFromGallery();
                               }),
                         ),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.grey,
                         ),
@@ -184,7 +186,7 @@ class _blogEditScreenState extends State<blogEditScreen> {
               ]),
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -228,7 +230,6 @@ class _blogEditScreenState extends State<blogEditScreen> {
                       // controller: _dis,
                       controller: contentController,
                       validator: (val) => val!.isEmpty ? "" : null,
-                      //keyboardType: TextInputType.multiline(signed: true),
                       maxLines: null,
                       style: const TextStyle(fontSize: 14, color: Colors.black),
                       decoration: const InputDecoration(
@@ -264,29 +265,29 @@ class _blogEditScreenState extends State<blogEditScreen> {
     });
   }
 
-  void saveblog() {
+  void saveBlog() {
     String title = titleController.text.trim();
     String content = contentController.text.trim();
 
     String? imagePath = _image != null ? _image!.path : null;
 
     if (id != null) {
-      Provider.of<blogProvider>(
+      Provider.of<BlogProvider>(
         this.context,
         listen: false,
-      ).addOrUpdateblog(id!, title, content, imagePath!, EditMode.UPDATE);
+      ).addOrUpdateBlog(id!, title, content, imagePath!, EditMode.UPDATE);
       Navigator.of(this.context).pop();
       Fluttertoast.showToast(
           toastLength: Toast.LENGTH_LONG,
           textColor: Colors.white,
           msg: "Blog Edited SuccessFully",
-          backgroundColor: Colors.yellow);
-      print("new blog addded");
+          backgroundColor: Colors.green);
+      print("new blog added");
     } else {
       int id = DateTime.now().millisecondsSinceEpoch;
 
-      Provider.of<blogProvider>(this.context, listen: false)
-          .addOrUpdateblog(id, title, content, imagePath!, EditMode.ADD);
+      Provider.of<BlogProvider>(this.context, listen: false)
+          .addOrUpdateBlog(id, title, content, imagePath!, EditMode.ADD);
       Fluttertoast.showToast(
           textColor: Colors.white,
           msg: "Blog Added SuccessFully",
@@ -301,7 +302,7 @@ class _blogEditScreenState extends State<blogEditScreen> {
     showDialog(
         context: this.context,
         builder: (context) {
-          return DeletePopUp(selectedblog!);
+          return DeletePopUp(selectedBlog!);
         });
   }
 }

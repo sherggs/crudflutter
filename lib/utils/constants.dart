@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart'; //https://pub.dev/packages/google_fonts
 
 const grey = Color(0xFFEAEAEA);
 const grey2 = Color(0xFF6D6D6D);
@@ -13,7 +13,7 @@ var headerRideStyle = GoogleFonts.roboto(
     fontSize: 15.0,
   ),
 );
-var headerNotesStyle = GoogleFonts.roboto(
+var headerblogsStyle = GoogleFonts.roboto(
   textStyle: TextStyle(
     color: white,
     fontSize: 45.0,
@@ -25,7 +25,7 @@ enum EditMode {
   UPDATE,
 }
 
-var noNotesStyle = GoogleFonts.roboto(
+var noblogsStyle = GoogleFonts.roboto(
   textStyle: TextStyle(
     fontSize: 22.0,
     color: black2,

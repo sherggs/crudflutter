@@ -1,41 +1,41 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart'; //Ref: https://pub.dev/packages/path
+import 'package:sqflite/sqflite.dart'; // Ref: https://pub.dev/packages/sqflite
 
 class DatabaseHelper {
   static Future database() async {
     final databasePath = await getDatabasesPath();
 
-    return openDatabase(join(databasePath, 'notes_database.db'),
+    return openDatabase(join(databasePath, 'blogs_database.db'),
         onCreate: (database, version) {
       return database.execute(
-          'CREATE TABLE notes(id INTEGER PRIMARY KEY, title TEXT, content TEXT, imagePath TEXT)');
+          'CREATE TABLE blogs(id INTEGER PRIMARY KEY, title TEXT, content TEXT, imagePath TEXT)');
     }, version: 1);
   }
 
   static Future insert(Map<String, Object> data) async {
     final database = await DatabaseHelper.database();
 
-    database.insert("notes", data,
+    database.insert("blogs", data,
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<List<Map<String, dynamic>>> getNotesFromDB() async {
+  static Future<List<Map<String, dynamic>>> getBlogsFromDB() async {
     final database = await DatabaseHelper.database();
 
-    return database.query("notes", orderBy: "id DESC");
+    return database.query("blogs", orderBy: "id DESC");
   }
 
-  static Future<List<Map<String, dynamic>>> getSearchNotesFromDB(
+  static Future<List<Map<String, dynamic>>> getSearchBlogsFromDB(
       String keyword) async {
     final database = await DatabaseHelper.database();
 
     return database
-        .query("notes", where: 'title LIKE ?', whereArgs: ['%$keyword%']);
+        .query("blogs", where: 'title LIKE ?', whereArgs: ['%$keyword%']);
   }
 
   static Future delete(int id) async {
     final database = await DatabaseHelper.database();
 
-    return database.delete('notes', where: 'id = ?', whereArgs: [id]);
+    return database.delete('blogs', where: 'id = ?', whereArgs: [id]);
   }
 }

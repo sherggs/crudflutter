@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:blogcrud/screens/searchscreen.dart';  //to search for items with title name
 import 'package:provider/provider.dart'; //Ref: https://pub.dev/packages/provider
@@ -24,7 +26,7 @@ class _BlogListScreenState extends State<BlogListScreen> {
               height: 40,
             ),
             header(),
-            Container(
+            SizedBox(
               height: 700,
               width: 500,
               child: FutureBuilder(

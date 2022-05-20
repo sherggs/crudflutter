@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
-
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart'; //Ref: https://pub.dev/packages/provider
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:url_launcher/url_launcher.dart'; //for the share icon to redirect to the mail
 
 import '../helper/blog_provider.dart'; //database Provider
@@ -13,14 +14,14 @@ import '../widgets/localcrud/customButton.dart'; //custom button styling
 import '../widgets/localcrud/custom_text.dart'; //custom text styling
 import 'blog_edit_screen.dart'; //create and update screen
 
-class blogViewScreen extends StatefulWidget {
+class BlogViewScreen extends StatefulWidget {
   static const route = '/blog-view';
 
   @override
-  _blogViewScreenState createState() => _blogViewScreenState();
+  _BlogViewScreenState createState() => _BlogViewScreenState();
 }
 
-class _blogViewScreenState extends State<blogViewScreen> {
+class _BlogViewScreenState extends State<BlogViewScreen> {
   Blog? selectedBlog;
 
   @override
@@ -41,7 +42,7 @@ class _blogViewScreenState extends State<blogViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 80,
         child: Column(
           children: [
